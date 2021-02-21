@@ -1,8 +1,8 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, h1, li, text, ul)
-import Html.Attributes exposing (src)
+import Html exposing (Html, div, h1, li, text, ul, span)
+import Html.Attributes exposing (class)
 import Time
 
 
@@ -92,15 +92,15 @@ view model =
         seconds =
             String.fromInt <| remainderBy minutesConst diffTime // secondConst
     in
-    div []
-        [ h1 [] [ text <| String.fromInt model.currentTime ]
-        , h1 [] [ text <| String.fromInt model.lastTime ]
+    div [class "container"]
+        [ h1 [] [ text "Nozomanu esta há " ]
         , ul []
-            [ li [] [ text <| "DIAS " ++ days ]
-            , li [] [ text <| "HORAS " ++ hours ]
-            , li [] [ text <| "MINUTOS " ++ minutes ]
-            , li [] [ text <| "SEGUNDOS " ++ seconds ]
+            [ li [] [ span[][ text <| days ], text "DIAS"]
+            , li [] [ span[][text <| hours ], text "HORAS"]
+            , li [] [ span[][text <| minutes ],  text "MINUTOS"]
+            , li [] [ span[][text <|  seconds ], text "SEGUNDOS"]
             ]
+            , h1 [] [ text "sem jogar LOL" ]
         ]
 
 
