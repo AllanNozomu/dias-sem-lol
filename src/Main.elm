@@ -1,8 +1,9 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, h1, li, text, ul, span)
+import Html exposing (Html, div, h1, li, span, text, ul)
 import Html.Attributes exposing (class)
+import Task
 import Time
 
 
@@ -41,9 +42,16 @@ type alias Model =
     }
 
 
+initModel : Model
+initModel =
+    Model
+        lastPlayedTimeMillis
+        0
+
+
 init : ( Model, Cmd Msg )
 init =
-    ( Model lastPlayedTimeMillis 0, Cmd.none )
+    ( initModel, Task.perform Tick Time.now )
 
 
 
@@ -92,15 +100,15 @@ view model =
         seconds =
             String.fromInt <| remainderBy minutesConst diffTime // secondConst
     in
-    div [class "container"]
+    div [ class "container" ]
         [ h1 [] [ text "Nozomanu esta há " ]
         , ul []
-            [ li [] [ span[][ text <| days ], text "DIAS"]
-            , li [] [ span[][text <| hours ], text "HORAS"]
-            , li [] [ span[][text <| minutes ],  text "MINUTOS"]
-            , li [] [ span[][text <|  seconds ], text "SEGUNDOS"]
+            [ li [] [ span [] [ text <| days ], text "DIAS" ]
+            , li [] [ span [] [ text <| hours ], text "HORAS" ]
+            , li [] [ span [] [ text <| minutes ], text "MINUTOS" ]
+            , li [] [ span [] [ text <| seconds ], text "SEGUNDOS" ]
             ]
-            , h1 [] [ text "sem jogar LOL" ]
+        , h1 [] [ text "sem jogar LOL" ]
         ]
 
 
