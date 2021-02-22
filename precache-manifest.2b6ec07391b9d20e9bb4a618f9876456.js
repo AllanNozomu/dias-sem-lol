@@ -4,7 +4,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dias-sem-lol/favicon.ico"
   },
   {
-    "revision": "047defed440a5c4aadd4d1a5e166bf9d",
+    "revision": "f7bcde2c2f569e772ef0508335dd16f2",
     "url": "/dias-sem-lol/index.html"
   },
   {
@@ -16,12 +16,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dias-sem-lol/manifest.json"
   },
   {
-    "revision": "ece9e6170bce7f684bb9",
-    "url": "/dias-sem-lol/static/css/main.2e20ef54.chunk.css"
+    "revision": "f64f82c0bc2121bee5a8",
+    "url": "/dias-sem-lol/static/css/main.e3304e4f.chunk.css"
   },
   {
-    "revision": "ece9e6170bce7f684bb9",
-    "url": "/dias-sem-lol/static/js/main.ece9e617.chunk.js"
+    "revision": "f64f82c0bc2121bee5a8",
+    "url": "/dias-sem-lol/static/js/main.f64f82c0.chunk.js"
   },
   {
     "revision": "ba6e1c08d999cfcfca94",
