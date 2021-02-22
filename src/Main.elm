@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, h1, h3, li, span, text, ul)
+import Html exposing (Html, div, h1, h3, li, span, text, ul, footer)
 import Html.Attributes exposing (class)
 import Http
 import Json.Decode exposing (Decoder, field)
@@ -203,7 +203,7 @@ view model =
         brazilZone =
             Time.customZone (-3 * 60) []
     in
-    div [ class "container" ]
+    div [ ]
         [ h1 [] [ text "Nozomanu esta há " ]
         , ul []
             [ li []
@@ -271,6 +271,21 @@ view model =
                     ++ String.fromInt recordPeriod.seconds
                     ++ " segundos "
             ]
+        , footer [][
+            text <|
+                        "Última atualização ocorreu em "
+                            ++ String.fromInt (Time.toDay brazilZone lastMatchPosix)
+                            ++ "/"
+                            ++ toStringMonth (Time.toMonth brazilZone lastMatchPosix)
+                            ++ "/"
+                            ++ String.fromInt (Time.toYear brazilZone lastMatchPosix)
+                            ++ " "
+                            ++ String.fromInt (Time.toHour brazilZone lastMatchPosix)
+                            ++ ":"
+                            ++ String.fromInt (Time.toMinute brazilZone lastMatchPosix)
+                            ++ ":"
+                            ++ String.fromInt (Time.toSecond brazilZone lastMatchPosix)
+                ]
         ]
 
 
