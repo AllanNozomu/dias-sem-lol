@@ -18,8 +18,8 @@ html, body {
 body {
   font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
   text-align: center;
-  color: #293c4b;
-  background-color: #f59b9b;
+  color: #F8FFE5;
+  background-color: #3083DC;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,4 +44,5 @@ li {
 li span {
   display: block;
   font-size: 5rem;
+  color: #F8FFE5
 }
