@@ -33,6 +33,46 @@ daysConst =
     24 * hoursconts
 
 
+toStringMonth : Time.Month -> String
+toStringMonth month =
+    case month of
+        Time.Jan ->
+            "01"
+
+        Time.Feb ->
+            "02"
+
+        Time.Mar ->
+            "03"
+
+        Time.Apr ->
+            "04"
+
+        Time.May ->
+            "05"
+
+        Time.Jun ->
+            "06"
+
+        Time.Jul ->
+            "07"
+
+        Time.Aug ->
+            "08"
+
+        Time.Sep ->
+            "09"
+
+        Time.Oct ->
+            "10"
+
+        Time.Nov ->
+            "11"
+
+        Time.Dec ->
+            "12"
+
+
 type Status
     = Failure
     | Loading
@@ -153,6 +193,15 @@ view model =
 
         diffPeriod =
             getPeriod diffTime
+
+        recordPeriod =
+            Basics.max model.data.longestSoFar diffTime |> getPeriod
+
+        lastMatchPosix =
+            Time.millisToPosix model.data.lastPlayedInMillis
+
+        brazilZone =
+            Time.customZone (-3 * 60) []
     in
     div [ class "container" ]
         [ h1 [] [ text "Nozomanu esta há " ]
@@ -195,6 +244,33 @@ view model =
                 ]
             ]
         , h1 [] [ text "sem jogar LOL" ]
+        , h3 []
+            [ text <|
+                "Última partida foi em "
+                    ++ String.fromInt (Time.toDay brazilZone lastMatchPosix)
+                    ++ "/"
+                    ++ toStringMonth (Time.toMonth brazilZone lastMatchPosix)
+                    ++ "/"
+                    ++ String.fromInt (Time.toYear brazilZone lastMatchPosix)
+                    ++ " "
+                    ++ String.fromInt (Time.toHour brazilZone lastMatchPosix)
+                    ++ ":"
+                    ++ String.fromInt (Time.toMinute brazilZone lastMatchPosix)
+                    ++ ":"
+                    ++ String.fromInt (Time.toSecond brazilZone lastMatchPosix)
+            ]
+        , h3 []
+            [ text <|
+                "O recorde atual é "
+                    ++ String.fromInt recordPeriod.days
+                    ++ " dias "
+                    ++ String.fromInt recordPeriod.hours
+                    ++ " horas "
+                    ++ String.fromInt recordPeriod.minutes
+                    ++ " minutos "
+                    ++ String.fromInt recordPeriod.seconds
+                    ++ " segundos "
+            ]
         ]
 
 
