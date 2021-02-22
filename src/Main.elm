@@ -1,8 +1,10 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, h1, li, span, text, ul)
+import Html exposing (Html, div, h1, h3, li, span, text, ul)
 import Html.Attributes exposing (class)
+import Http
+import Json.Decode exposing (Decoder, field)
 import Task
 import Time
 
@@ -31,27 +33,61 @@ daysConst =
     24 * hoursconts
 
 
-lastPlayedTimeMillis : Int
-lastPlayedTimeMillis =
-    1613846619000
+type Status
+    = Failure
+    | Loading
+    | Success
+
+
+type alias Period =
+    { days : Int
+    , hours : Int
+    , minutes : Int
+    , seconds : Int
+    }
+
+
+type alias Data =
+    { lastPlayedInMillis : Int
+    , lastUpdate : Int
+    , longestSoFar : Int
+    }
 
 
 type alias Model =
-    { lastTime : Int
+    { data : Data
     , currentTime : Int
+    , status : Status
     }
 
 
 initModel : Model
 initModel =
     Model
-        lastPlayedTimeMillis
+        (Data 0 0 0)
         0
+        Loading
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( initModel, Task.perform Tick Time.now )
+    ( initModel, Cmd.batch [ Task.perform Tick Time.now, getData ] )
+
+
+dataDecoder : Decoder Data
+dataDecoder =
+    Json.Decode.map3 Data
+        (field "lastPlayedInMillis" Json.Decode.int)
+        (field "lastUpdate" Json.Decode.int)
+        (field "longestSoFar" Json.Decode.int)
+
+
+getData : Cmd Msg
+getData =
+    Http.get
+        { url = "https://dias-sem-lol-default-rtdb.firebaseio.com/data.json"
+        , expect = Http.expectJson GotData dataDecoder
+        }
 
 
 
@@ -69,6 +105,7 @@ subscriptions model =
 
 type Msg
     = Tick Time.Posix
+    | GotData (Result Http.Error Data)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -77,36 +114,85 @@ update msg model =
         Tick newTime ->
             ( { model | currentTime = Time.posixToMillis newTime }, Cmd.none )
 
+        GotData res ->
+            case res of
+                Ok data ->
+                    ( { model | data = data, status = Success }, Cmd.none )
+
+                Err _ ->
+                    ( { model | status = Failure }, Cmd.none )
+
 
 
 ---- VIEW ----
+
+
+getPeriod : Int -> Period
+getPeriod t =
+    let
+        days =
+            t // daysConst
+
+        hours =
+            remainderBy daysConst t // hoursconts
+
+        minutes =
+            remainderBy hoursconts t // minutesConst
+
+        seconds =
+            remainderBy minutesConst t // secondConst
+    in
+    Period days hours minutes seconds
 
 
 view : Model -> Html Msg
 view model =
     let
         diffTime =
-            model.currentTime - model.lastTime
+            model.currentTime - model.data.lastPlayedInMillis
 
-        days =
-            diffTime // daysConst
-
-        hours =
-            remainderBy daysConst diffTime // hoursconts
-
-        minutes =
-            remainderBy hoursconts diffTime // minutesConst
-
-        seconds =
-            remainderBy minutesConst diffTime // secondConst
+        diffPeriod =
+            getPeriod diffTime
     in
     div [ class "container" ]
         [ h1 [] [ text "Nozomanu esta há " ]
         , ul []
-            [ li [] [ span [] [ text <| String.fromInt days ], text <| if days > 1 then "DIAS" else "DIA" ]
-            , li [] [ span [] [ text <| String.fromInt hours ], text <| if hours > 1 then "HORAS" else "HORA"]
-            , li [] [ span [] [ text <| String.fromInt minutes ], text <| if minutes > 1 then "MINUTOS" else "MINUTO" ]
-            , li [] [ span [] [ text <| String.fromInt seconds ], text <| if seconds > 1 then "SEGUNDOS" else "SEGUNDO" ]
+            [ li []
+                [ span [] [ text <| String.fromInt diffPeriod.days ]
+                , text <|
+                    if diffPeriod.days > 1 then
+                        "DIAS"
+
+                    else
+                        "DIA"
+                ]
+            , li []
+                [ span [] [ text <| String.fromInt diffPeriod.hours ]
+                , text <|
+                    if diffPeriod.hours > 1 then
+                        "HORAS"
+
+                    else
+                        "HORA"
+                ]
+            , li []
+                [ span [] [ text <| String.fromInt diffPeriod.minutes ]
+                , text <|
+                    if diffPeriod.minutes > 1 then
+                        "MINUTOS"
+
+                    else
+                        "MINUTO"
+                ]
+            , li []
+                [ span [] [ text <| String.fromInt diffPeriod.seconds ]
+                , text <|
+                    if diffPeriod.seconds > 1 then
+                        "SEGUNDOS"
+
+                    else
+                        "SEGUNDO"
+                ]
             ]
         , h1 [] [ text "sem jogar LOL" ]
         ]
