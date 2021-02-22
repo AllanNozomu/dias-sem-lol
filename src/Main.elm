@@ -89,24 +89,24 @@ view model =
             model.currentTime - model.lastTime
 
         days =
-            String.fromInt <| diffTime // daysConst
+            diffTime // daysConst
 
         hours =
-            String.fromInt <| remainderBy daysConst diffTime // hoursconts
+            remainderBy daysConst diffTime // hoursconts
 
         minutes =
-            String.fromInt <| remainderBy hoursconts diffTime // minutesConst
+            remainderBy hoursconts diffTime // minutesConst
 
         seconds =
-            String.fromInt <| remainderBy minutesConst diffTime // secondConst
+            remainderBy minutesConst diffTime // secondConst
     in
     div [ class "container" ]
         [ h1 [] [ text "Nozomanu esta há " ]
         , ul []
-            [ li [] [ span [] [ text <| days ], text "DIAS" ]
-            , li [] [ span [] [ text <| hours ], text "HORAS" ]
-            , li [] [ span [] [ text <| minutes ], text "MINUTOS" ]
-            , li [] [ span [] [ text <| seconds ], text "SEGUNDOS" ]
+            [ li [] [ span [] [ text <| String.fromInt days ], text <| if days > 1 then "DIAS" else "DIA" ]
+            , li [] [ span [] [ text <| String.fromInt hours ], text <| if hours > 1 then "HORAS" else "HORA"]
+            , li [] [ span [] [ text <| String.fromInt minutes ], text <| if minutes > 1 then "MINUTOS" else "MINUTO" ]
+            , li [] [ span [] [ text <| String.fromInt seconds ], text <| if seconds > 1 then "SEGUNDOS" else "SEGUNDO" ]
             ]
         , h1 [] [ text "sem jogar LOL" ]
         ]
