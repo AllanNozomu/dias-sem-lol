@@ -1,13 +1,12 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, h1, h3, li, span, text, ul, footer)
+import Html exposing (Html, div, footer, h1, h3, li, span, text, ul)
 import Http
 import Json.Decode exposing (Decoder)
+import String
 import Task
 import Time
-import Json.Decode
-import String
 
 
 
@@ -33,9 +32,10 @@ daysConst : Int
 daysConst =
     24 * hoursconts
 
+
 brazilZone : Time.Zone
 brazilZone =
-            Time.customZone (-3 * 60) []
+    Time.customZone (-3 * 60) []
 
 
 toStringMonth : Time.Month -> String
@@ -77,22 +77,36 @@ toStringMonth month =
         Time.Dec ->
             "12"
 
+
 paddingZeros : Int -> String
 paddingZeros n =
     if n < 10 then
-        "0" ++ String.fromInt n 
+        "0" ++ String.fromInt n
+
     else
-        String.fromInt n 
+        String.fromInt n
+
 
 formatDateTime : Time.Posix -> String
-formatDateTime t = 
+formatDateTime t =
     let
-        year = Time.toYear brazilZone t
-        month = Time.toMonth brazilZone t |> toStringMonth
-        date = Time.toDay brazilZone t
-        hour = Time.toHour brazilZone t
-        minute = Time.toMinute brazilZone t
-        second = Time.toSecond brazilZone t
+        year =
+            Time.toYear brazilZone t
+
+        month =
+            Time.toMonth brazilZone t |> toStringMonth
+
+        date =
+            Time.toDay brazilZone t
+
+        hour =
+            Time.toHour brazilZone t
+
+        minute =
+            Time.toMinute brazilZone t
+
+        second =
+            Time.toSecond brazilZone t
     in
     paddingZeros date ++ "/" ++ month ++ "/" ++ paddingZeros year ++ " " ++ paddingZeros hour ++ ":" ++ paddingZeros minute ++ ":" ++ paddingZeros second
 
@@ -116,6 +130,7 @@ type alias Data =
     , lastUpdate : Int
     , longestSoFar : Int
     }
+
 
 type alias DataDirty =
     { lastPlayedInMillis : String
@@ -147,12 +162,15 @@ init =
 dataDecoder : Decoder DataDirty
 dataDecoder =
     Json.Decode.map3 DataDirty
-        (Json.Decode.at ["fields", "lastPlayedInMillis", "integerValue"] Json.Decode.string)
-        (Json.Decode.at ["fields", "lastUpdate", "integerValue"] Json.Decode.string)
-        (Json.Decode.at ["fields", "longestSoFar", "integerValue"] Json.Decode.string)
-        -- (field "fields" <| field "lastPlayedInMillis" <| field "integerValue" Json.Decode.int)
-        -- (field "fields" <| field "lastUpdate" <| field "integerValue" Json.Decode.int)
-        -- (field "fields" <| field "longestSoFar" <| field "integerValue" Json.Decode.int)
+        (Json.Decode.at [ "fields", "lastPlayedInMillis", "integerValue" ] Json.Decode.string)
+        (Json.Decode.at [ "fields", "lastUpdate", "integerValue" ] Json.Decode.string)
+        (Json.Decode.at [ "fields", "longestSoFar", "integerValue" ] Json.Decode.string)
+
+
+
+-- (field "fields" <| field "lastPlayedInMillis" <| field "integerValue" Json.Decode.int)
+-- (field "fields" <| field "lastUpdate" <| field "integerValue" Json.Decode.int)
+-- (field "fields" <| field "longestSoFar" <| field "integerValue" Json.Decode.int)
 
 
 getData : Cmd Msg
@@ -191,10 +209,11 @@ update msg model =
             case res of
                 Ok dataDirty ->
                     let
-                        data = Data 
-                            (String.toInt dataDirty.lastPlayedInMillis |> Maybe.withDefault 0) 
-                            (String.toInt dataDirty.lastUpdate |> Maybe.withDefault 0) 
-                            (String.toInt dataDirty.longestSoFar |> Maybe.withDefault 0)
+                        data =
+                            Data
+                                (String.toInt dataDirty.lastPlayedInMillis |> Maybe.withDefault 0)
+                                (String.toInt dataDirty.lastUpdate |> Maybe.withDefault 0)
+                                (String.toInt dataDirty.longestSoFar |> Maybe.withDefault 0)
                     in
                     ( { model | data = data, status = Success }, Cmd.none )
 
@@ -241,72 +260,75 @@ view model =
 
         lastUpdatePosix =
             Time.millisToPosix model.data.lastUpdate
-
     in
     if model.status == Loading then
-        h1[][ text "Carregando" ]
+        h1 [] [ text "Carregando" ]
+
     else
-        div [ ]
+        div []
             [ h1 [] [ text "Nozomanu esta há " ]
             , ul []
-            [ li []
-                [ span [] [ text <| String.fromInt diffPeriod.days ]
-                , text <|
-                    if diffPeriod.days > 1 then
-                        "DIAS"
+                [ li []
+                    [ span [] [ text <| String.fromInt diffPeriod.days ]
+                    , text <|
+                        if diffPeriod.days > 1 then
+                            "DIAS"
 
-                    else
-                        "DIA"
+                        else
+                            "DIA"
+                    ]
+                , li []
+                    [ span [] [ text <| String.fromInt diffPeriod.hours ]
+                    , text <|
+                        if diffPeriod.hours > 1 then
+                            "HORAS"
+
+                        else
+                            "HORA"
+                    ]
+                , li []
+                    [ span [] [ text <| String.fromInt diffPeriod.minutes ]
+                    , text <|
+                        if diffPeriod.minutes > 1 then
+                            "MINUTOS"
+
+                        else
+                            "MINUTO"
+                    ]
+                , li []
+                    [ span [] [ text <| String.fromInt diffPeriod.seconds ]
+                    , text <|
+                        if diffPeriod.seconds > 1 then
+                            "SEGUNDOS"
+
+                        else
+                            "SEGUNDO"
+                    ]
                 ]
-            , li []
-                [ span [] [ text <| String.fromInt diffPeriod.hours ]
-                , text <|
-                    if diffPeriod.hours > 1 then
-                        "HORAS"
-
-                    else
-                        "HORA"
+            , h1 [] [ text "sem jogar LOL" ]
+            , h3 []
+                [ text <|
+                    "Última partida foi em "
+                        ++ formatDateTime lastMatchPosix
                 ]
-            , li []
-                [ span [] [ text <| String.fromInt diffPeriod.minutes ]
-                , text <|
-                    if diffPeriod.minutes > 1 then
-                        "MINUTOS"
-
-                    else
-                        "MINUTO"
+            , h3 []
+                [ text <|
+                    "O recorde atual é "
+                        ++ String.fromInt recordPeriod.days
+                        ++ " dias "
+                        ++ String.fromInt recordPeriod.hours
+                        ++ " horas "
+                        ++ String.fromInt recordPeriod.minutes
+                        ++ " minutos "
+                        ++ String.fromInt recordPeriod.seconds
+                        ++ " segundos "
                 ]
-            , li []
-                [ span [] [ text <| String.fromInt diffPeriod.seconds ]
-                , text <|
-                    if diffPeriod.seconds > 1 then
-                        "SEGUNDOS"
-
-                    else
-                        "SEGUNDO"
+            , footer []
+                [ text <|
+                    "Última atualização ocorreu em "
+                        ++ formatDateTime lastUpdatePosix
                 ]
             ]
-        , h1 [] [ text "sem jogar LOL" ]
-        , h3 []
-            [ text <|
-                "Última partida foi em " ++ (formatDateTime lastMatchPosix)]
-        , h3 []
-            [ text <|
-                "O recorde atual é "
-                    ++ String.fromInt recordPeriod.days
-                    ++ " dias "
-                    ++ String.fromInt recordPeriod.hours
-                    ++ " horas "
-                    ++ String.fromInt recordPeriod.minutes
-                    ++ " minutos "
-                    ++ String.fromInt recordPeriod.seconds
-                    ++ " segundos "
-            ]
-        , footer [][
-            text <|
-                        "Última atualização ocorreu em " ++ (formatDateTime lastUpdatePosix)
-                ]
-        ]
 
 
 
