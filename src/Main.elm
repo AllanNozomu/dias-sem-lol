@@ -7,6 +7,7 @@ import Json.Decode exposing (Decoder)
 import Task
 import Time
 import Json.Decode
+import String
 
 
 
@@ -31,6 +32,10 @@ hoursconts =
 daysConst : Int
 daysConst =
     24 * hoursconts
+
+brazilZone : Time.Zone
+brazilZone =
+            Time.customZone (-3 * 60) []
 
 
 toStringMonth : Time.Month -> String
@@ -71,6 +76,25 @@ toStringMonth month =
 
         Time.Dec ->
             "12"
+
+paddingZeros : Int -> String
+paddingZeros n =
+    if n < 10 then
+        "0" ++ String.fromInt n 
+    else
+        String.fromInt n 
+
+formatDateTime : Time.Posix -> String
+formatDateTime t = 
+    let
+        year = Time.toYear brazilZone t
+        month = Time.toMonth brazilZone t |> toStringMonth
+        date = Time.toDay brazilZone t
+        hour = Time.toHour brazilZone t
+        minute = Time.toMinute brazilZone t
+        second = Time.toSecond brazilZone t
+    in
+    paddingZeros date ++ "/" ++ month ++ "/" ++ paddingZeros year ++ " " ++ paddingZeros hour ++ ":" ++ paddingZeros minute ++ ":" ++ paddingZeros second
 
 
 type Status
@@ -218,8 +242,6 @@ view model =
         lastUpdatePosix =
             Time.millisToPosix model.data.lastUpdate
 
-        brazilZone =
-            Time.customZone (-3 * 60) []
     in
     if model.status == Loading then
         h1[][ text "Carregando" ]
@@ -267,19 +289,7 @@ view model =
         , h1 [] [ text "sem jogar LOL" ]
         , h3 []
             [ text <|
-                "Última partida foi em "
-                    ++ String.fromInt (Time.toDay brazilZone lastMatchPosix)
-                    ++ "/"
-                    ++ toStringMonth (Time.toMonth brazilZone lastMatchPosix)
-                    ++ "/"
-                    ++ String.fromInt (Time.toYear brazilZone lastMatchPosix)
-                    ++ " "
-                    ++ String.fromInt (Time.toHour brazilZone lastMatchPosix)
-                    ++ ":"
-                    ++ String.fromInt (Time.toMinute brazilZone lastMatchPosix)
-                    ++ ":"
-                    ++ String.fromInt (Time.toSecond brazilZone lastMatchPosix)
-            ]
+                "Última partida foi em " ++ (formatDateTime lastMatchPosix)]
         , h3 []
             [ text <|
                 "O recorde atual é "
@@ -294,18 +304,7 @@ view model =
             ]
         , footer [][
             text <|
-                        "Última atualização ocorreu em "
-                            ++ String.fromInt (Time.toDay brazilZone lastUpdatePosix)
-                            ++ "/"
-                            ++ toStringMonth (Time.toMonth brazilZone lastUpdatePosix)
-                            ++ "/"
-                            ++ String.fromInt (Time.toYear brazilZone lastUpdatePosix)
-                            ++ " "
-                            ++ String.fromInt (Time.toHour brazilZone lastUpdatePosix)
-                            ++ ":"
-                            ++ String.fromInt (Time.toMinute brazilZone lastUpdatePosix)
-                            ++ ":"
-                            ++ String.fromInt (Time.toSecond brazilZone lastUpdatePosix)
+                        "Última atualização ocorreu em " ++ (formatDateTime lastUpdatePosix)
                 ]
         ]
 
