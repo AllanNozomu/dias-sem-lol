@@ -2,11 +2,11 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (Html, div, h1, h3, li, span, text, ul, footer)
-import Html.Attributes exposing (class)
 import Http
-import Json.Decode exposing (Decoder, field)
+import Json.Decode exposing (Decoder)
 import Task
 import Time
+import Json.Decode
 
 
 
@@ -93,6 +93,12 @@ type alias Data =
     , longestSoFar : Int
     }
 
+type alias DataDirty =
+    { lastPlayedInMillis : String
+    , lastUpdate : String
+    , longestSoFar : String
+    }
+
 
 type alias Model =
     { data : Data
@@ -114,18 +120,21 @@ init =
     ( initModel, Cmd.batch [ Task.perform Tick Time.now, getData ] )
 
 
-dataDecoder : Decoder Data
+dataDecoder : Decoder DataDirty
 dataDecoder =
-    Json.Decode.map3 Data
-        (field "lastPlayedInMillis" Json.Decode.int)
-        (field "lastUpdate" Json.Decode.int)
-        (field "longestSoFar" Json.Decode.int)
+    Json.Decode.map3 DataDirty
+        (Json.Decode.at ["fields", "lastPlayedInMillis", "integerValue"] Json.Decode.string)
+        (Json.Decode.at ["fields", "lastUpdate", "integerValue"] Json.Decode.string)
+        (Json.Decode.at ["fields", "longestSoFar", "integerValue"] Json.Decode.string)
+        -- (field "fields" <| field "lastPlayedInMillis" <| field "integerValue" Json.Decode.int)
+        -- (field "fields" <| field "lastUpdate" <| field "integerValue" Json.Decode.int)
+        -- (field "fields" <| field "longestSoFar" <| field "integerValue" Json.Decode.int)
 
 
 getData : Cmd Msg
 getData =
     Http.get
-        { url = "https://dias-sem-lol-default-rtdb.firebaseio.com/data.json"
+        { url = "https://firestore.googleapis.com/v1/projects/dias-sem-lol-305623/databases/(default)/documents/data/data"
         , expect = Http.expectJson GotData dataDecoder
         }
 
@@ -145,7 +154,7 @@ subscriptions model =
 
 type Msg
     = Tick Time.Posix
-    | GotData (Result Http.Error Data)
+    | GotData (Result Http.Error DataDirty)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -156,7 +165,13 @@ update msg model =
 
         GotData res ->
             case res of
-                Ok data ->
+                Ok dataDirty ->
+                    let
+                        data = Data 
+                            (String.toInt dataDirty.lastPlayedInMillis |> Maybe.withDefault 0) 
+                            (String.toInt dataDirty.lastUpdate |> Maybe.withDefault 0) 
+                            (String.toInt dataDirty.longestSoFar |> Maybe.withDefault 0)
+                    in
                     ( { model | data = data, status = Success }, Cmd.none )
 
                 Err _ ->
@@ -200,12 +215,18 @@ view model =
         lastMatchPosix =
             Time.millisToPosix model.data.lastPlayedInMillis
 
+        lastUpdatePosix =
+            Time.millisToPosix model.data.lastUpdate
+
         brazilZone =
             Time.customZone (-3 * 60) []
     in
-    div [ ]
-        [ h1 [] [ text "Nozomanu esta há " ]
-        , ul []
+    if model.status == Loading then
+        h1[][ text "Carregando" ]
+    else
+        div [ ]
+            [ h1 [] [ text "Nozomanu esta há " ]
+            , ul []
             [ li []
                 [ span [] [ text <| String.fromInt diffPeriod.days ]
                 , text <|
@@ -274,17 +295,17 @@ view model =
         , footer [][
             text <|
                         "Última atualização ocorreu em "
-                            ++ String.fromInt (Time.toDay brazilZone lastMatchPosix)
+                            ++ String.fromInt (Time.toDay brazilZone lastUpdatePosix)
                             ++ "/"
-                            ++ toStringMonth (Time.toMonth brazilZone lastMatchPosix)
+                            ++ toStringMonth (Time.toMonth brazilZone lastUpdatePosix)
                             ++ "/"
-                            ++ String.fromInt (Time.toYear brazilZone lastMatchPosix)
+                            ++ String.fromInt (Time.toYear brazilZone lastUpdatePosix)
                             ++ " "
-                            ++ String.fromInt (Time.toHour brazilZone lastMatchPosix)
+                            ++ String.fromInt (Time.toHour brazilZone lastUpdatePosix)
                             ++ ":"
-                            ++ String.fromInt (Time.toMinute brazilZone lastMatchPosix)
+                            ++ String.fromInt (Time.toMinute brazilZone lastUpdatePosix)
                             ++ ":"
-                            ++ String.fromInt (Time.toSecond brazilZone lastMatchPosix)
+                            ++ String.fromInt (Time.toSecond brazilZone lastUpdatePosix)
                 ]
         ]
 
