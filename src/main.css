@@ -47,6 +47,10 @@ li span {
   color: #F8FFE5
 }
 
+p {
+  font-size: 0.75rem;
+}
+
 footer {
   position: fixed;
   bottom: 0;

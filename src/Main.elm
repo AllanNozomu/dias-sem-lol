@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, footer, h1, h3, li, span, text, ul)
+import Html exposing (Html, div, footer, h1, h2, li, p, span, text, ul)
 import Http
 import Json.Decode exposing (Decoder)
 import String
@@ -306,12 +306,12 @@ view model =
                     ]
                 ]
             , h1 [] [ text "sem jogar LOL" ]
-            , h3 []
+            , h2 []
                 [ text <|
                     "Última partida foi em "
                         ++ formatDateTime lastMatchPosix
                 ]
-            , h3 []
+            , h2 []
                 [ text <|
                     "O recorde atual é "
                         ++ String.fromInt recordPeriod.days
@@ -323,6 +323,7 @@ view model =
                         ++ String.fromInt recordPeriod.seconds
                         ++ " segundos "
                 ]
+            , p [] [ text "dias-sem-lol isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc." ]
             , footer []
                 [ text <|
                     "Última atualização ocorreu em "
