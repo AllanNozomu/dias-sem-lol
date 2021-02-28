@@ -54,6 +54,7 @@ This template is based on https://github.com/othneildrew/Best-README-Template
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+        <li><a href="#system-design">System Desing</a></li>
       </ul>
     </li>
     <li>
@@ -90,7 +91,28 @@ The main language used in this project was Elm. There are some code written also
 * [Firebase](https://firebase.google.com/)
 * [Riot Games API](https://developer.riotgames.com/)
 
+### System design
 
+This project is being separated in two parts:
+1. Frontend
+2. Scheduler Cloud Function and Storage
+
+![Product Name Screen Shot][system-diagram]
+
+#### Frontend
+
+The Frontend is an Elm written project. It generates an static website that is currently being hosted in Github Pages.
+
+#### Scheduler Cloud Function and Storage
+
+For fetching the data from the Riot Games API, a Google Cloud function is being triggered by Google Cloud Scheduler every 10 minutes. 
+This Cloud function has a code written in Javascript that fetches the data from the Riot Games API and stores it at Google Firestore.
+There are 3 informations being stores:
+```json
+"longestSoFar" : 1234, // long, longest time in milliseconds
+"lastPlayedInMillis" : 1234, // long, timestamp of the last match
+"lastUpdate" : 1234, // long, timestamp of when this function runned
+```
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -157,3 +179,4 @@ Distributed under the MIT License. See [LICENSE](https://raw.githubusercontent.c
 Project Link: [https://github.com/allannozomu/dias-sem-lol](https://github.com/allannozomu/dias-sem-lol)
 
 [product-screenshot]: public/screenshot.png
+[system-diagram]: public/diagram.png
