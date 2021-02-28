@@ -263,17 +263,18 @@ view model =
             Time.millisToPosix model.data.lastUpdate
     in
     if model.status == Loading then
-        div[][
-            h1 [] [ text "Carregando" ],div[class "loader-inner ball-pulse"][
-                div[][],
-                div[][],
-                div[][]
+        div []
+            [ h1 [] [ text "Carregando" ]
+            , div [ class "loader-inner ball-pulse" ]
+                [ div [] []
+                , div [] []
+                , div [] []
+                ]
             ]
-        ]
 
     else
         div []
-            [h1 [] [ text "Nozomanu esta há " ]
+            [ h1 [] [ text "Nozomanu esta há " ]
             , ul []
                 [ li []
                     [ span [] [ text <| String.fromInt diffPeriod.days ]
