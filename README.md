@@ -60,7 +60,7 @@ This template is based on https://github.com/othneildrew/Best-README-Template
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![Product Name Screen Shot][product-screenshot]
 
 Dias-sem-lol is a personal project that track how much time has passed since my last League of Legends match. The main objective is actually to incentive me to not play this game too much. It separate the time in days, hours, minutes and seconds.
 
