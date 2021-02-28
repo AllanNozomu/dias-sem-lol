@@ -7,9 +7,11 @@
   "vendors~main.js": "/dias-sem-lol/static/js/vendors~main.0b49ec49.chunk.js",
   "vendors~main.js.map": "/dias-sem-lol/static/js/vendors~main.0b49ec49.chunk.js.map",
   "./service-worker.js": "/dias-sem-lol/./service-worker.js",
+  "diagram.png": "/dias-sem-lol/diagram.png",
   "favicon.ico": "/dias-sem-lol/favicon.ico",
   "index.html": "/dias-sem-lol/index.html",
-  "logo.svg": "/dias-sem-lol/logo.svg",
+  "logo.png": "/dias-sem-lol/logo.png",
   "manifest.json": "/dias-sem-lol/manifest.json",
-  "precache-manifest.42d7b85335069d1efd2f9ef086697346.js": "/dias-sem-lol/precache-manifest.42d7b85335069d1efd2f9ef086697346.js"
+  "precache-manifest.03cf6af301e008fd1552155028846d7b.js": "/dias-sem-lol/precache-manifest.03cf6af301e008fd1552155028846d7b.js",
+  "screenshot.png": "/dias-sem-lol/screenshot.png"
 }
