@@ -274,7 +274,7 @@ view model =
 
     else
         div []
-            [ h1 [] [ text "Nozomanu esta há " ]
+            [ h1 [class "title"] [ text "Nozomanu esta há " ]
             , ul []
                 [ li []
                     [ span [] [ text <| String.fromInt diffPeriod.days ]
@@ -334,7 +334,7 @@ view model =
             , p [] [ text "dias-sem-lol isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc." ]
             , footer []
                 [ text <|
-                    "Última atualização ocorreu em "
+                    "Última atualização: "
                         ++ formatDateTime lastUpdatePosix
                 ]
             ]

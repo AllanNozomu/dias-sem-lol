@@ -29,6 +29,10 @@ h1 {
   font-size: 3rem;
 }
 
+h2 {
+  font-size: 1.5rem;
+}
+
 img {
   margin: 20px 0;
   max-width: 200px;
@@ -49,6 +53,7 @@ li span {
 
 p {
   font-size: 0.75rem;
+  padding-bottom: 1.75rem;
 }
 
 footer {
@@ -59,4 +64,23 @@ footer {
   height: 1.5rem;
   background-color: #F8FFE5;
   color: #3083DC;
+}
+
+@media only screen and (max-width: 676px) {
+  html, body {
+    margin: 0;
+  }
+
+  .title {
+    margin-top: 5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  li {
+    padding: 0.5em;
+    display: block;
+  }
 }
