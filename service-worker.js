@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/dias-sem-lol/precache-manifest.32b48e442f68f4b5058c66eea1fbcd04.js"
+  "/dias-sem-lol/precache-manifest.b84158c4fbd508580dc3e3b0d39811de.js"
 );
 
 workbox.core.skipWaiting();

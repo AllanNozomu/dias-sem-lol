@@ -1,7 +1,7 @@
 {
-  "main.css": "/dias-sem-lol/static/css/main.390bd84a.chunk.css",
-  "main.js": "/dias-sem-lol/static/js/main.462b76e7.chunk.js",
-  "main.js.map": "/dias-sem-lol/static/js/main.462b76e7.chunk.js.map",
+  "main.css": "/dias-sem-lol/static/css/main.d1094c01.chunk.css",
+  "main.js": "/dias-sem-lol/static/js/main.b7ecb8d2.chunk.js",
+  "main.js.map": "/dias-sem-lol/static/js/main.b7ecb8d2.chunk.js.map",
   "runtime~main.js": "/dias-sem-lol/static/js/runtime~main.ba6e1c08.js",
   "runtime~main.js.map": "/dias-sem-lol/static/js/runtime~main.ba6e1c08.js.map",
   "vendors~main.js": "/dias-sem-lol/static/js/vendors~main.0b49ec49.chunk.js",
@@ -12,6 +12,6 @@
   "index.html": "/dias-sem-lol/index.html",
   "logo.png": "/dias-sem-lol/logo.png",
   "manifest.json": "/dias-sem-lol/manifest.json",
-  "precache-manifest.32b48e442f68f4b5058c66eea1fbcd04.js": "/dias-sem-lol/precache-manifest.32b48e442f68f4b5058c66eea1fbcd04.js",
+  "precache-manifest.b84158c4fbd508580dc3e3b0d39811de.js": "/dias-sem-lol/precache-manifest.b84158c4fbd508580dc3e3b0d39811de.js",
   "screenshot.png": "/dias-sem-lol/screenshot.png"
 }
