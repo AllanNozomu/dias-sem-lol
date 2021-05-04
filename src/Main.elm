@@ -133,13 +133,6 @@ type alias Data =
     }
 
 
-type alias DataDirty =
-    { lastPlayedInMillis : String
-    , lastUpdate : String
-    , longestSoFar : String
-    }
-
-
 type alias Model =
     { data : Data
     , currentTime : Int
@@ -160,24 +153,18 @@ init =
     ( initModel, Cmd.batch [ Task.perform Tick Time.now, getData ] )
 
 
-dataDecoder : Decoder DataDirty
+dataDecoder : Decoder Data
 dataDecoder =
-    Json.Decode.map3 DataDirty
-        (Json.Decode.at [ "fields", "lastPlayedInMillis", "integerValue" ] Json.Decode.string)
-        (Json.Decode.at [ "fields", "lastUpdate", "integerValue" ] Json.Decode.string)
-        (Json.Decode.at [ "fields", "longestSoFar", "integerValue" ] Json.Decode.string)
-
-
-
--- (field "fields" <| field "lastPlayedInMillis" <| field "integerValue" Json.Decode.int)
--- (field "fields" <| field "lastUpdate" <| field "integerValue" Json.Decode.int)
--- (field "fields" <| field "longestSoFar" <| field "integerValue" Json.Decode.int)
+    Json.Decode.map3 Data
+        (Json.Decode.at [ "lastPlayedInMillis" ] Json.Decode.int)
+        (Json.Decode.at [ "lastUpdate" ] Json.Decode.int)
+        (Json.Decode.at [ "longestSoFar" ] Json.Decode.int)
 
 
 getData : Cmd Msg
 getData =
     Http.get
-        { url = "https://firestore.googleapis.com/v1/projects/dias-sem-lol-305623/databases/(default)/documents/data/data"
+        { url = "https://dias-sem-lol-305623.firebaseapp.com/fetchDataFromFirestore"
         , expect = Http.expectJson GotData dataDecoder
         }
 
@@ -197,7 +184,7 @@ subscriptions model =
 
 type Msg
     = Tick Time.Posix
-    | GotData (Result Http.Error DataDirty)
+    | GotData (Result Http.Error Data)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -208,14 +195,7 @@ update msg model =
 
         GotData res ->
             case res of
-                Ok dataDirty ->
-                    let
-                        data =
-                            Data
-                                (String.toInt dataDirty.lastPlayedInMillis |> Maybe.withDefault 0)
-                                (String.toInt dataDirty.lastUpdate |> Maybe.withDefault 0)
-                                (String.toInt dataDirty.longestSoFar |> Maybe.withDefault 0)
-                    in
+                Ok data ->
                     ( { model | data = data, status = Success }, Cmd.none )
 
                 Err _ ->
@@ -274,7 +254,7 @@ view model =
 
     else
         div []
-            [ h1 [class "title"] [ text "Nozomanu esta há " ]
+            [ h1 [ class "title" ] [ text "Nozomanu esta há " ]
             , ul []
                 [ li []
                     [ span [] [ text <| String.fromInt diffPeriod.days ]
